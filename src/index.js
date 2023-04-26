@@ -13,6 +13,11 @@ function buildRamenCard(ramenObj) {
   ramenPic.setAttribute("id", `${generateNewId()}`);
   ramenPic.addEventListener("click", showRamenInfo);
   ramenMenuDiv.append(ramenPic);
+  document.querySelector(".detail-image").src = ramenPic.src;
+  document.querySelector(".name").textContent = ramenObj.name;
+  document.querySelector(".restaurant").textContent = ramenObj.restaurant;
+  document.querySelector("#rating-display").textContent = ramenObj.rating;
+  document.querySelector("#comment-display").textContent = ramenObj.comment;
 }
 
 function showRamenInfo(e) {
@@ -34,7 +39,6 @@ function idCounterClosure() {
 }
 
 function addNewRamen(e) {
-  e.preventDefault();
   firstEvent = e;
   let newRamen = document.createElement("img");
   newRamen.src = e.target.querySelector("#new-image").value;
@@ -54,3 +58,22 @@ function addNewRamen(e) {
   });
   document.querySelector("#ramen-menu").append(newRamen);
 }
+
+//POST to json.db
+const submitForm = document.querySelector("#new-ramen");
+submitForm.addEventListener("submit", (e) => {
+  fetch("http://localhost:3000/ramens", {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+      Accept: "application/json",
+    },
+    body: JSON.stringify({
+      name: e.target.querySelector("#new-name").value,
+      restaurant: e.target.querySelector("#new-restaurant").value,
+      image: e.target.querySelector("#new-image").value,
+      rating: e.target.querySelector("#new-rating").value,
+      comment: e.target.querySelector("#new-comment").value,
+    }),
+  });
+});
